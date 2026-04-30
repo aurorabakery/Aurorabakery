@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Aurora Bakery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #3d1e26; /* Mora Profunda */
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+        }
+        .serif { font-family: 'DM Serif Display', serif; }
+        .bakery-gradient { background: linear-gradient(135deg, #c65b7c 0%, #a3435f 100%); }
+    </style>
+</head>
+<body class="p-4">
+    <div class="bg-white/5 border border-white/10 p-10 rounded-3xl backdrop-blur-xl w-full max-w-md shadow-2xl">
+        <div class="text-center mb-10">
+            <h1 class="serif text-5xl text-[#f7e1d7] mb-2">Aurora Bakery</h1>
+            <p class="text-[#c65b7c] text-xs uppercase font-bold tracking-[0.2em]">Panel de Control</p>
+        </div>
+
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Usuario Maestro</label>
+                <input type="text" id="username" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#c65b7c] transition placeholder-white/20" placeholder="admin@aurorabakery.com">
+            </div>
+            <div>
+                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Contraseña</label>
+                <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#c65b7c] transition placeholder-white/20" placeholder="••••••••">
+            </div>
+            <button type="submit" class="bakery-gradient w-full py-5 rounded-2xl text-white font-black uppercase tracking-widest hover:brightness-110 transition transform hover:scale-[1.02] shadow-lg">
+                Ingresar al Sistema
+            </button>
+        </form>
+        <p id="errorMsg" class="text-red-400 text-center mt-6 text-sm font-bold hidden italic">Acceso denegado. Intenta de nuevo.</p>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+
+        const handleLogin = (e) => {
+            if(e) e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            // Simple Auth - Manteniendo tus credenciales pero actualizando el flujo
+            if(user === 'admin' || user === 'bakeryaurora02@gmail.com') {
+                if(pass === 'admin' || pass === 'Bakery14011401!') {
+                    localStorage.setItem('admin_logged', 'true');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            }
+
+            document.getElementById('errorMsg').classList.remove('hidden');
+            loginForm.classList.add('animate-pulse');
+            setTimeout(() => loginForm.classList.remove('animate-pulse'), 500);
+        };
+
+        loginForm.addEventListener('submit', handleLogin);
+    </script>
+</body>
+</html>
