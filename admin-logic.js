@@ -20,6 +20,9 @@ function adminPanel() {
             if (localStorage.getItem('admin_logged') !== 'true') {
                 window.location.href = 'login.html';
             }
+            // Si quieres forzar que te lo pida una vez más, puedes descomentar la línea de abajo:
+            // localStorage.removeItem('gh_token');
+
             this.github.token = localStorage.getItem('gh_token') || '';
             this.loadData();
         },
@@ -78,22 +81,50 @@ function adminPanel() {
         },
 
         saveConfig() {
+            // Limpiar el teléfono de espacios, guiones o paréntesis
+            this.config.phone = this.config.phone.replace(/\D/g, '');
             localStorage.setItem('aurora_config_v2', JSON.stringify(this.config));
-            this.showToast('Configuración Guardada', 'El teléfono ha sido actualizado localmente');
+            this.showToast('Configuración Guardada', 'El teléfono se actualizó. No olvides "Publicar" para que afecte a los clientes.');
         },
 
         handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            if (file.size > 15 * 1024 * 1024) {
-                alert("La imagen es muy pesada. Máximo 15MB.");
-                return;
-            }
-
             const reader = new FileReader();
             reader.onload = (e) => {
-                this.form.image = e.target.result;
+                const img = new Image();
+                img.onload = () => {
+                    // Configurar el lienzo (canvas) para redimensionar
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Máximo 800px de ancho o alto para optimizar
+                    const MAX_SIZE = 800;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convertir a JPEG con calidad 0.7 (reduce el peso un 90%)
+                    this.form.image = canvas.toDataURL('image/jpeg', 0.7);
+                    this.showToast('Imagen Optimizada', 'La foto se redujo para cargar más rápido.');
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         },
@@ -173,14 +204,22 @@ function adminPanel() {
                 }
 
                 // Guardar y refrescar
-                localStorage.setItem('aurora_products_v2', JSON.stringify(this.products));
-                this.products = [...this.products];
-                this.showModal = false;
-                this.showToast('¡Guardado Local!', 'Haz clic en Publicar para que se vea en la web');
+                try {
+                    localStorage.setItem('aurora_products_v2', JSON.stringify(this.products));
+                    this.products = [...this.products];
+                    this.showModal = false;
+                    this.showToast('¡Guardado Local!', 'Haz clic en Publicar para que se vea en la web');
+                } catch (storageErr) {
+                    if (storageErr.name === 'QuotaExceededError') {
+                        alert("⚠️ LA IMAGEN ES DEMASIADO GRANDE.\n\nEl navegador no tiene espacio para guardar esta foto. Por favor:\n1. Usa una imagen más pequeña (menos de 1MB).\n2. O usa un link de imagen (URL).\n3. O borra productos antiguos para liberar espacio.");
+                    } else {
+                        throw storageErr;
+                    }
+                }
 
             } catch (err) {
                 console.error(err);
-                alert("Error al guardar localmente.");
+                alert("Error al procesar el producto. Revisa que los campos sean correctos.");
             }
         },
 
