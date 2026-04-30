@@ -11,18 +11,31 @@ function renderProducts(filter = 'all') {
   if (!grid) return;
   grid.innerHTML = '';
 
-  // Leer configuración (Limpieza de memoria Aurora V2)
+  // Leer configuración (Aurora V2)
+  let currentConfig = CONFIG;
   const storedConfig = localStorage.getItem('aurora_config_v2');
-  const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
+  if (storedConfig) {
+    try { currentConfig = JSON.parse(storedConfig); } catch(e) {}
+  }
 
-  // Leer productos (Limpieza de memoria Aurora V2)
+  // Leer productos (Aurora V2)
+  let currentProducts = MENU;
   const storedProducts = localStorage.getItem('aurora_products_v2');
-  const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
+  if (storedProducts) {
+    try {
+      const parsed = JSON.parse(storedProducts);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        currentProducts = parsed;
+      }
+    } catch(e) {}
+  }
 
   const items = filter === 'all' ? currentProducts : currentProducts.filter(p => p.cat === filter);
 
-  // Renderizar pestañas de filtro dinámicamente si es necesario
-  renderFilterTabs(currentConfig.categories, filter);
+  // Renderizar pestañas de filtro dinámicamente
+  if (currentConfig.categories) {
+    renderFilterTabs(currentConfig.categories, filter);
+  }
 
   items.forEach((product, i) => {
     const card = document.createElement('div');
@@ -30,14 +43,14 @@ function renderProducts(filter = 'all') {
     card.setAttribute('data-aos', 'fade-up');
     card.setAttribute('data-aos-delay', String((i % 4) * 80));
 
-    // Determinar precio inicial (el base o el de la primera variante)
+    // Precio dinámico
     let initialPrice = product.price;
     let hasVariants = product.variants && product.variants.length > 0;
     if (hasVariants) initialPrice = product.variants[0].price;
 
     const priceDisplay = `<span class="card-price" id="price-${product.id}">RD$ ${Number(initialPrice).toLocaleString()}</span>`;
 
-    // Generar selectores de pastillas (Pills) si hay variantes u opciones
+    // Opciones (Pills)
     let variantsHTML = '';
     if (hasVariants) {
       variantsHTML = `
@@ -76,9 +89,12 @@ function renderProducts(filter = 'all') {
       `;
     }
 
+    // Fondo degradado fallback
+    const bgGradient = GRADIENTS[product.id] || GRADIENTS['default'] || 'linear-gradient(135deg,#c65b7c,#3d1e26)';
+
     card.innerHTML = `
       <div class="card-img-wrap">
-        <div class="card-img-gradient" style="background:${GRADIENTS[product.id] || 'linear-gradient(135deg,#c65b7c,#3d1e26)'}"></div>
+        <div class="card-img-gradient" style="background:${bgGradient}"></div>
         ${product.image ? `<img src="${product.image}" alt="${product.name}" id="img-${product.id}">` : `<div class="card-img-emoji">${product.emoji || '✨'}</div>`}
         ${product.badge ? `<span class="card-badge">${product.badge}</span>` : ''}
       </div>
@@ -89,7 +105,7 @@ function renderProducts(filter = 'all') {
         ${flavorsHTML}
         <div class="card-footer">
           ${priceDisplay}
-          <button class="add-btn" id="btn-${product.id}" onclick="addToCart('${product.id}')" title="Agregar al carrito">
+          <button class="add-btn" id="btn-${product.id}" onclick="addToCart('${product.id}')">
             <i class="fa-solid fa-plus"></i>
           </button>
         </div>
@@ -105,26 +121,24 @@ function renderProducts(filter = 'all') {
    PILL SELECTION LOGIC
 =========================== */
 function selectPill(productId, type, value, price, btn) {
-  // Desactivar otros botones en el mismo contenedor
   const container = btn.parentElement;
   container.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-
-  // Activar este botón
   btn.classList.add('active');
-
-  // Calcular precio total dinámico (Base/Variante + Sabor Extra)
   updateProductDisplayPrice(productId);
 }
 
 function updateProductDisplayPrice(productId) {
+  let currentProducts = MENU;
   const storedProducts = localStorage.getItem('aurora_products_v2');
-  const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
+  if (storedProducts) {
+    try { currentProducts = JSON.parse(storedProducts); } catch(e) {}
+  }
+
   const product = currentProducts.find(p => String(p.id) === String(productId));
   if (!product) return;
 
   let basePrice = product.price;
 
-  // Precio de Variante
   const variantContainer = document.getElementById(`variants-${productId}`);
   if (variantContainer) {
     const activeV = variantContainer.querySelector('.pill-btn.active');
@@ -135,7 +149,6 @@ function updateProductDisplayPrice(productId) {
     }
   }
 
-  // Precio de Sabor
   let extraPrice = 0;
   const flavorContainer = document.getElementById(`flavors-${productId}`);
   if (flavorContainer) {
@@ -150,11 +163,7 @@ function updateProductDisplayPrice(productId) {
 
   const priceEl = document.getElementById(`price-${productId}`);
   if (priceEl) {
-    priceEl.style.opacity = '0.3';
-    setTimeout(() => {
-      priceEl.textContent = `RD$ ${Number(basePrice + extraPrice).toLocaleString()}`;
-      priceEl.style.opacity = '1';
-    }, 150);
+    priceEl.textContent = `RD$ ${Number(basePrice + extraPrice).toLocaleString()}`;
   }
 }
 
@@ -162,16 +171,18 @@ function updateProductDisplayPrice(productId) {
    ADD TO CART
 =========================== */
 function addToCart(id) {
+  let currentProducts = MENU;
   const storedProducts = localStorage.getItem('aurora_products_v2');
-  const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
-  const product = currentProducts.find(p => String(p.id) === String(id));
+  if (storedProducts) {
+    try { currentProducts = JSON.parse(storedProducts); } catch(e) {}
+  }
 
+  const product = currentProducts.find(p => String(p.id) === String(id));
   if (!product) return;
 
   let finalPrice = product.price;
   let detail = "";
 
-  // Obtener variante seleccionada desde las pastillas (pills)
   const variantContainer = document.getElementById(`variants-${id}`);
   if (variantContainer) {
     const activeV = variantContainer.querySelector('.pill-btn.active');
@@ -185,7 +196,6 @@ function addToCart(id) {
     }
   }
 
-  // Obtener sabor seleccionado desde las pastillas (pills)
   const flavorContainer = document.getElementById(`flavors-${id}`);
   if (flavorContainer) {
     const activeF = flavorContainer.querySelector('.pill-btn.active');
@@ -193,17 +203,14 @@ function addToCart(id) {
       const fText = activeF.innerText.split('\n')[0].trim();
       const fName = fText.split(' (+')[0].trim();
       detail += ` (${fName})`;
-
       const flavorObj = product.options.find(o => (typeof o === 'string' ? o : o.name) === fName);
-      if (flavorObj && typeof flavorObj === 'object') {
-        finalPrice += (flavorObj.price || 0);
-      }
+      if (flavorObj && typeof flavorObj === 'object') finalPrice += (flavorObj.price || 0);
     }
   }
 
   const cartItemName = product.name + detail;
-
   const existing = cart.find(item => item.name === cartItemName);
+
   if (existing) {
     existing.qty++;
   } else {
@@ -217,33 +224,24 @@ function addToCart(id) {
     });
   }
 
-  const btn = document.getElementById(`btn-${id}`);
-  if (btn) {
-    btn.classList.add('added');
-    setTimeout(() => btn.classList.remove('added'), 400);
-  }
-
   const badge = document.getElementById('cart-count');
   badge.classList.add('bump');
   setTimeout(() => badge.classList.remove('bump'), 450);
 
-  showToast(`${product.emoji} ${product.name} agregado`);
+  showToast(`¡${product.name} agregado!`);
   renderCart();
 }
 
 /* ===========================
    TOAST
 =========================== */
-let toastTimer;
-function showToast(msg, bg = '#D4AF37') {
+function showToast(msg) {
   const toast = document.getElementById('add-toast');
   const text  = document.getElementById('toast-text');
-  toast.style.background = bg;
-  toast.style.color = '#000';
+  if (!toast || !text) return;
   text.textContent = msg;
   toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
 /* ===========================
@@ -261,82 +259,40 @@ function renderCart() {
   badge.textContent = totalItems;
 
   if (cart.length === 0) {
-    container.innerHTML = `
-      <div class="cart-empty">
-        <i class="fa-solid fa-bag-shopping"></i>
-        <p>Tu carrito está vacío.<br>¡Descubre una delicia!</p>
-      </div>`;
+    container.innerHTML = `<div class="cart-empty"><p>Tu carrito está vacío</p></div>`;
     summary.innerHTML = '';
-    waBtn.disabled = true;
+    if (waBtn) waBtn.disabled = true;
     return;
   }
 
-  waBtn.disabled = false;
+  if (waBtn) waBtn.disabled = false;
   container.innerHTML = '';
 
   cart.forEach(item => {
     const el = document.createElement('div');
     el.className = 'cart-item';
-    el.id = `ci-${item.id}`;
     el.innerHTML = `
-      <div class="ci-emoji">${item.emoji}</div>
       <div class="ci-info">
         <div class="ci-name">${item.name}</div>
-        <div class="ci-detail">RD$ ${item.price.toLocaleString()} c/u</div>
+        <div class="ci-detail">RD$ ${item.price.toLocaleString()} x ${item.qty}</div>
       </div>
       <div class="ci-qty-wrap">
-        <button class="qty-btn minus" onclick="changeQty(${item.id}, -1)"><i class="fa-solid fa-minus"></i></button>
+        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
         <span class="qty-num">${item.qty}</span>
-        <button class="qty-btn" onclick="changeQty(${item.id}, 1)"><i class="fa-solid fa-plus"></i></button>
+        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
       </div>
-      <div class="ci-price">RD$ ${(item.price * item.qty).toLocaleString()}</div>
     `;
     container.appendChild(el);
   });
 
-  summary.innerHTML = `
-    <div class="summary-row">
-      <span>Subtotal (${totalItems} items)</span>
-      <span>RD$ ${totalPrice.toLocaleString()}</span>
-    </div>
-    <div class="summary-row total">
-      <span>TOTAL</span>
-      <span class="total-val">RD$ ${totalPrice.toLocaleString()}</span>
-    </div>
-  `;
+  summary.innerHTML = `<div class="summary-total">Total: RD$ ${totalPrice.toLocaleString()}</div>`;
 }
 
-/* ===========================
-   QUANTITY CHANGE / REMOVE
-=========================== */
 function changeQty(id, delta) {
   const idx = cart.findIndex(i => i.id === id);
   if (idx < 0) return;
   cart[idx].qty += delta;
-  if (cart[idx].qty <= 0) {
-    const el = document.getElementById(`ci-${id}`);
-    if (el) {
-      el.classList.add('removing');
-      setTimeout(() => {
-        cart.splice(idx, 1);
-        renderCart();
-      }, 280);
-    } else {
-      cart.splice(idx, 1);
-      renderCart();
-    }
-    return;
-  }
-  renderCart();
-}
-
-/* ===========================
-   CLEAR CART
-=========================== */
-function clearCart() {
-  if (cart.length === 0) return;
-  if (!confirm('¿Vaciar el carrito?')) return;
-  cart = [];
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
   renderCart();
 }
 
@@ -344,20 +300,11 @@ function renderFilterTabs(categories, activeCat) {
   const tabContainer = document.querySelector('.filter-tabs');
   if (!tabContainer) return;
 
-  let html = `<button class="filter-tab ${activeCat === 'all' ? 'active' : ''}" data-cat="all">✨ Todo</button>`;
+  let html = `<button class="filter-tab ${activeCat === 'all' ? 'active' : ''}" onclick="renderProducts('all')">✨ Todo</button>`;
   categories.forEach(cat => {
-    html += `<button class="filter-tab ${activeCat === cat ? 'active' : ''}" data-cat="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`;
+    html += `<button class="filter-tab ${activeCat === cat ? 'active' : ''}" onclick="renderProducts('${cat}')">${cat}</button>`;
   });
   tabContainer.innerHTML = html;
-
-  // Re-vincular eventos
-  document.querySelectorAll('.filter-tab').forEach(tab => {
-    tab.onclick = () => {
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      renderProducts(tab.dataset.cat);
-    };
-  });
 }
 
 /* ===========================
@@ -366,100 +313,48 @@ function renderFilterTabs(categories, activeCat) {
 function sendWhatsApp() {
   if (cart.length === 0) return;
 
+  let currentConfig = CONFIG;
   const storedConfig = localStorage.getItem('aurora_config_v2');
-  const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
-  const phone = currentConfig.phone;
+  if (storedConfig) {
+    try { currentConfig = JSON.parse(storedConfig); } catch(e) {}
+  }
 
+  const cleanPhone = currentConfig.phone.replace(/\D/g, '');
   const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-  let msg = "✨ *PEDIDO - AURORA BAKERY* ✨\n\n";
-
+  let msg = "✨ *NUEVO PEDIDO - AURORA BAKERY* ✨\n\n";
   cart.forEach(item => {
-    msg += `✅ *${item.qty}x ${item.name}*\n`;
-    msg += `   RD$ ${(item.price * item.qty).toLocaleString()}\n\n`;
+    msg += `✅ *${item.qty}x ${item.name}* - RD$ ${(item.price * item.qty).toLocaleString()}\n`;
   });
+  msg += `\n💰 *TOTAL: RD$ ${totalPrice.toLocaleString()}*`;
 
-  msg += "==========================\n";
-  msg += `💰 *TOTAL: RD$ ${totalPrice.toLocaleString()}*\n`;
-  msg += "==========================\n\n";
-  msg += "¡Hola! Me gustaría encargar estos postres. 😊";
-
-  const encoded = encodeURIComponent(msg);
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`;
-
-  const win = window.open(whatsappUrl, '_blank');
-  if (!win) {
-    location.href = whatsappUrl;
-  }
+  window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-/* ===========================
-   UI TOGGLES & LISTENERS
-=========================== */
 function toggleCart() {
-  const panel   = document.getElementById('cart-panel');
-  const overlay = document.getElementById('cart-overlay');
-  const isOpen  = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  overlay.classList.toggle('open', !isOpen);
-  document.body.style.overflow = isOpen ? '' : 'hidden';
-}
-
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('navbar');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 40);
-});
-
-/* ===========================
-   INIT
-=========================== */
-function initBakeryDecor() {
-  const container = document.getElementById('bakery-decor');
-  if (!container) return;
-  const items = ['🍰', '🧁', '🥐', '🍞', '過', '🍪', '🥨'];
-  for (let i = 0; i < 15; i++) {
-    const span = document.createElement('span');
-    span.textContent = items[Math.floor(Math.random() * items.length)];
-    span.style.left = Math.random() * 100 + '%';
-    span.style.animationDelay = Math.random() * 10 + 's';
-    span.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-    container.appendChild(span);
-  }
+  document.getElementById('cart-panel').classList.toggle('open');
+  document.getElementById('cart-overlay').classList.toggle('open');
 }
 
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if (loader) loader.classList.add('hide');
+  const loader = document.getElementById('loader');
+  if (loader) loader.classList.add('hide');
 
-    AOS.init({ once: true, duration: 600, offset: 60 });
+  // Inicialización de decoración
+  const decor = document.getElementById('bakery-decor');
+  if (decor) {
+    const emojis = ['🍰', '🧁', '🥐', '🍩'];
+    for(let i=0; i<10; i++) {
+       const span = document.createElement('span');
+       span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+       span.style.left = Math.random()*100 + '%';
+       span.style.animationDelay = Math.random()*5 + 's';
+       decor.appendChild(span);
+    }
+  }
 
-    // Bakery Decoration Animation
-    initBakeryDecor();
+  renderProducts();
+  renderCart();
 
-    // Global filter listeners
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        renderProducts(tab.dataset.cat);
-      });
-    });
-
-    renderProducts();
-    renderCart();
-
-    // NUEVO: Actualizar el link de WhatsApp del footer dinámicamente
-    const storedConfig = localStorage.getItem('aurora_config_v2');
-    const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
-
-    // Asegurar que el número tenga el formato correcto para el link
-    const cleanPhone = currentConfig.phone.replace(/\D/g, '');
-
-    const footerWa = document.querySelector('footer a[href*="wa.me"]');
-    if (footerWa) footerWa.href = `https://wa.me/${cleanPhone}`;
-
-    const waBtn = document.getElementById('wa-btn');
-    // Si existe la función sendWhatsApp, se encargará del botón principal.
-  }, 1600);
+  if (typeof AOS !== 'undefined') AOS.init();
 });
