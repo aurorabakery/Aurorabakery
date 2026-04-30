@@ -62,6 +62,7 @@
                 <button @click="publishToGitHub()" class="coral-bg text-white px-6 py-2.5 rounded-full font-black text-xs uppercase hover:brightness-110 transition shadow-lg">
                     <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Publicar Cambios
                 </button>
+                <button @click="const t = prompt('Pega tu nuevo Token:'); if(t){ localStorage.setItem('gh_token', t); location.reload(); }" class="text-xs text-white/40 hover:text-white transition underline">Llave</button>
                 <button @click="logout()" class="text-sm crema-text/60 hover:text-white transition">Salir</button>
             </div>
         </div>

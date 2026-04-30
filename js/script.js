@@ -11,12 +11,12 @@ function renderProducts(filter = 'all') {
   if (!grid) return;
   grid.innerHTML = '';
 
-  // Leer configuración
-  const storedConfig = localStorage.getItem('elite_config');
+  // Leer configuración (Limpieza de memoria Aurora V2)
+  const storedConfig = localStorage.getItem('aurora_config_v2');
   const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
 
-  // Leer productos
-  const storedProducts = localStorage.getItem('elite_products');
+  // Leer productos (Limpieza de memoria Aurora V2)
+  const storedProducts = localStorage.getItem('aurora_products_v2');
   const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
 
   const items = filter === 'all' ? currentProducts : currentProducts.filter(p => p.cat === filter);
@@ -117,7 +117,7 @@ function selectPill(productId, type, value, price, btn) {
 }
 
 function updateProductDisplayPrice(productId) {
-  const storedProducts = localStorage.getItem('elite_products');
+  const storedProducts = localStorage.getItem('aurora_products_v2');
   const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
   const product = currentProducts.find(p => String(p.id) === String(productId));
   if (!product) return;
@@ -162,7 +162,7 @@ function updateProductDisplayPrice(productId) {
    ADD TO CART
 =========================== */
 function addToCart(id) {
-  const storedProducts = localStorage.getItem('elite_products');
+  const storedProducts = localStorage.getItem('aurora_products_v2');
   const currentProducts = storedProducts ? JSON.parse(storedProducts) : MENU;
   const product = currentProducts.find(p => String(p.id) === String(id));
 
@@ -264,7 +264,7 @@ function renderCart() {
     container.innerHTML = `
       <div class="cart-empty">
         <i class="fa-solid fa-bag-shopping"></i>
-        <p>Tu carrito está vacío.<br>¡Descubre tu esencia!</p>
+        <p>Tu carrito está vacío.<br>¡Descubre una delicia!</p>
       </div>`;
     summary.innerHTML = '';
     waBtn.disabled = true;
@@ -366,7 +366,7 @@ function renderFilterTabs(categories, activeCat) {
 function sendWhatsApp() {
   if (cart.length === 0) return;
 
-  const storedConfig = localStorage.getItem('elite_config');
+  const storedConfig = localStorage.getItem('aurora_config_v2');
   const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
   const phone = currentConfig.phone;
 
@@ -385,7 +385,7 @@ function sendWhatsApp() {
   msg += "¡Hola! Me gustaría encargar estos postres. 😊";
 
   const encoded = encodeURIComponent(msg);
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=18295095974&text=${encoded}`;
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encoded}`;
 
   const win = window.open(whatsappUrl, '_blank');
   if (!win) {
@@ -416,7 +416,7 @@ window.addEventListener('scroll', () => {
 function initBakeryDecor() {
   const container = document.getElementById('bakery-decor');
   if (!container) return;
-  const items = ['🍰', '🧁', '🥐', '🍞', '🍩', '🍪', '🥨'];
+  const items = ['🍰', '🧁', '🥐', '🍞', '過', '🍪', '🥨'];
   for (let i = 0; i < 15; i++) {
     const span = document.createElement('span');
     span.textContent = items[Math.floor(Math.random() * items.length)];
@@ -450,7 +450,7 @@ window.addEventListener('load', () => {
     renderCart();
 
     // NUEVO: Actualizar el link de WhatsApp del footer dinámicamente
-    const storedConfig = localStorage.getItem('elite_config');
+    const storedConfig = localStorage.getItem('aurora_config_v2');
     const currentConfig = storedConfig ? JSON.parse(storedConfig) : (typeof CONFIG !== 'undefined' ? CONFIG : {phone: '18295095974'});
     const footerWa = document.querySelector('footer a[href*="wa.me"]');
     if (footerWa) footerWa.href = `https://wa.me/${currentConfig.phone}`;
