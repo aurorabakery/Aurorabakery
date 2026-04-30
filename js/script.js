@@ -451,8 +451,15 @@ window.addEventListener('load', () => {
 
     // NUEVO: Actualizar el link de WhatsApp del footer dinámicamente
     const storedConfig = localStorage.getItem('aurora_config_v2');
-    const currentConfig = storedConfig ? JSON.parse(storedConfig) : (typeof CONFIG !== 'undefined' ? CONFIG : {phone: '18295095974'});
+    const currentConfig = storedConfig ? JSON.parse(storedConfig) : CONFIG;
+
+    // Asegurar que el número tenga el formato correcto para el link
+    const cleanPhone = currentConfig.phone.replace(/\D/g, '');
+
     const footerWa = document.querySelector('footer a[href*="wa.me"]');
-    if (footerWa) footerWa.href = `https://wa.me/${currentConfig.phone}`;
+    if (footerWa) footerWa.href = `https://wa.me/${cleanPhone}`;
+
+    const waBtn = document.getElementById('wa-btn');
+    // Si existe la función sendWhatsApp, se encargará del botón principal.
   }, 1600);
 });

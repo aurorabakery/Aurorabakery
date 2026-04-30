@@ -78,8 +78,10 @@ function adminPanel() {
         },
 
         saveConfig() {
+            // Limpiar el teléfono de espacios, guiones o paréntesis
+            this.config.phone = this.config.phone.replace(/\D/g, '');
             localStorage.setItem('aurora_config_v2', JSON.stringify(this.config));
-            this.showToast('Configuración Guardada', 'El teléfono ha sido actualizado localmente');
+            this.showToast('Configuración Guardada', 'El teléfono se actualizó. No olvides "Publicar" para que afecte a los clientes.');
         },
 
         handleFileUpload(event) {
