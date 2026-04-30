@@ -319,16 +319,30 @@ function sendWhatsApp() {
     try { currentConfig = JSON.parse(storedConfig); } catch(e) {}
   }
 
-  const cleanPhone = currentConfig.phone.replace(/\D/g, '');
+  const cleanPhone = currentConfig.phone.replace(/\D/g, '') || '18295095974';
   const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-  let msg = "✨ *NUEVO PEDIDO - AURORA BAKERY* ✨\n\n";
-  cart.forEach(item => {
-    msg += `✅ *${item.qty}x ${item.name}* - RD$ ${(item.price * item.qty).toLocaleString()}\n`;
-  });
-  msg += `\n💰 *TOTAL: RD$ ${totalPrice.toLocaleString()}*`;
+  // FORMATO RECUPERADO DE ELITE AROMAS
+  let msg = "✨ *PEDIDO - AURORA BAKERY* ✨\n\n";
 
-  window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+  cart.forEach(item => {
+    msg += `✅ *${item.qty}x ${item.name}*\n`;
+    msg += `   RD$ ${(item.price * item.qty).toLocaleString()}\n\n`;
+  });
+
+  msg += "==========================\n";
+  msg += `💰 *TOTAL: RD$ ${totalPrice.toLocaleString()}*\n`;
+  msg += "==========================\n\n";
+  msg += "¡Hola! Me gustaría confirmar mi pedido. 😊🧁";
+
+  const encoded = encodeURIComponent(msg);
+  // Usamos api.whatsapp.com como en Elite Aromas para evitar errores de símbolos
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encoded}`;
+
+  const win = window.open(whatsappUrl, '_blank');
+  if (!win) {
+    location.href = whatsappUrl;
+  }
 }
 
 function toggleCart() {
