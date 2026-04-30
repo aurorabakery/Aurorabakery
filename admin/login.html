@@ -20,23 +20,23 @@
     <div class="bg-white/5 border border-white/10 p-10 rounded-3xl backdrop-blur-xl w-full max-w-md shadow-2xl">
         <div class="text-center mb-10">
             <h1 class="serif text-5xl text-[#f7e1d7] mb-2">Aurora Bakery</h1>
-            <p class="text-[#c65b7c] text-xs uppercase font-bold tracking-[0.2em]">Panel de Control</p>
+            <p class="text-[#c65b7c] text-xs uppercase font-bold tracking-[0.2em]">Panel de Control Oficial</p>
         </div>
 
         <form id="loginForm" class="space-y-6">
             <div>
-                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Usuario Maestro</label>
+                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Correo de Administrador</label>
                 <input type="text" id="username" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#c65b7c] transition placeholder-white/20" placeholder="admin@aurorabakery.com">
             </div>
             <div>
-                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Contraseña</label>
+                <label class="block text-[#f7e1d7] text-[10px] mb-2 uppercase font-extrabold tracking-wider">Contraseña Privada</label>
                 <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#c65b7c] transition placeholder-white/20" placeholder="••••••••">
             </div>
             <button type="submit" class="bakery-gradient w-full py-5 rounded-2xl text-white font-black uppercase tracking-widest hover:brightness-110 transition transform hover:scale-[1.02] shadow-lg">
                 Ingresar al Sistema
             </button>
         </form>
-        <p id="errorMsg" class="text-red-400 text-center mt-6 text-sm font-bold hidden italic">Acceso denegado. Intenta de nuevo.</p>
+        <p id="errorMsg" class="text-red-400 text-center mt-6 text-sm font-bold hidden italic">Acceso restringido. Datos incorrectos.</p>
     </div>
 
     <script>
@@ -47,13 +47,11 @@
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
 
-            // Simple Auth - Manteniendo tus credenciales pero actualizando el flujo
-            if(user === 'admin' || user === 'bakeryaurora02@gmail.com') {
-                if(pass === 'admin' || pass === 'Bakery14011401!') {
-                    localStorage.setItem('admin_logged', 'true');
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
+            // ÚNICO ACCESO PERMITIDO
+            if(user === 'bakeryaurora02@gmail.com' && pass === 'Bakery14011401!') {
+                localStorage.setItem('admin_logged', 'true');
+                window.location.href = 'dashboard.html';
+                return;
             }
 
             document.getElementById('errorMsg').classList.remove('hidden');
