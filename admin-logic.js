@@ -25,22 +25,22 @@ function adminPanel() {
         },
 
         loadData() {
-            // Cargar Config (Cambiado a aurora_ para limpieza)
-            const storedConfig = localStorage.getItem('aurora_config');
+            // Cargar Config con lógica V2
+            const storedConfig = localStorage.getItem('aurora_config_v2');
             if (storedConfig) {
                 this.config = JSON.parse(storedConfig);
             } else if (typeof CONFIG !== 'undefined') {
                 this.config = CONFIG;
-                localStorage.setItem('aurora_config', JSON.stringify(this.config));
+                localStorage.setItem('aurora_config_v2', JSON.stringify(this.config));
             }
 
-            // Cargar Productos (Cambiado a aurora_ para limpieza)
-            const storedProds = localStorage.getItem('aurora_products');
+            // Cargar Productos con lógica V2
+            const storedProds = localStorage.getItem('aurora_products_v2');
             if (storedProds) {
                 this.products = JSON.parse(storedProds);
             } else if (typeof MENU !== 'undefined') {
                 this.products = MENU;
-                localStorage.setItem('aurora_products', JSON.stringify(this.products));
+                localStorage.setItem('aurora_products_v2', JSON.stringify(this.products));
             }
         },
 
@@ -65,8 +65,9 @@ function adminPanel() {
         },
 
         get filteredProducts() {
+            if (!this.products) return [];
             return this.products.filter(p => {
-                const matchesSearch = p.name.toLowerCase().includes(this.search.toLowerCase());
+                const matchesSearch = (p.name || '').toLowerCase().includes(this.search.toLowerCase());
                 const matchesCat = this.filterCat === 'all' || p.cat === this.filterCat;
                 return matchesSearch && matchesCat;
             });
@@ -77,7 +78,7 @@ function adminPanel() {
         },
 
         saveConfig() {
-            localStorage.setItem('aurora_config', JSON.stringify(this.config));
+            localStorage.setItem('aurora_config_v2', JSON.stringify(this.config));
             this.showToast('Configuración Guardada', 'El teléfono ha sido actualizado localmente');
         },
 
@@ -104,11 +105,11 @@ function adminPanel() {
                     const cleanCat = newCat.trim().toLowerCase();
                     if (!this.config.categories.includes(cleanCat)) {
                         this.config.categories.push(cleanCat);
-                        localStorage.setItem('aurora_config', JSON.stringify(this.config));
+                        localStorage.setItem('aurora_config_v2', JSON.stringify(this.config));
                     }
                     this.form.cat = cleanCat;
                 } else {
-                    this.form.cat = this.config.categories[0];
+                    this.form.cat = this.config.categories[0] || '';
                 }
             }
         },
@@ -135,6 +136,13 @@ function adminPanel() {
                 };
             }
             this.showModal = true;
+        },
+
+        deleteProduct(id) {
+            if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+            this.products = this.products.filter(p => String(p.id) !== String(id));
+            localStorage.setItem('aurora_products_v2', JSON.stringify(this.products));
+            this.showToast('Eliminado', 'Producto borrado localmente. No olvides Publicar.');
         },
 
         saveProduct() {
@@ -165,7 +173,7 @@ function adminPanel() {
                 }
 
                 // Guardar y refrescar
-                localStorage.setItem('aurora_products', JSON.stringify(this.products));
+                localStorage.setItem('aurora_products_v2', JSON.stringify(this.products));
                 this.products = [...this.products];
                 this.showModal = false;
                 this.showToast('¡Guardado Local!', 'Haz clic en Publicar para que se vea en la web');
@@ -177,7 +185,6 @@ function adminPanel() {
         },
 
         async publishToGitHub() {
-            // Si el token guardado no existe, pedirlo
             if (!this.github.token) {
                 const token = prompt("Ingresa tu GitHub Token (ghp_...):");
                 if (!token) return;
@@ -188,7 +195,6 @@ function adminPanel() {
             this.showToast('Sincronizando...', 'Subiendo cambios a la nube...');
 
             try {
-                // 1. Obtener SHA del archivo actual
                 const res = await fetch(`https://api.github.com/repos/${this.github.repo}/contents/${this.github.path}`, {
                     headers: { 'Authorization': `token ${this.github.token}` }
                 });
@@ -196,17 +202,15 @@ function adminPanel() {
                 if (res.status === 401) {
                     localStorage.removeItem('gh_token');
                     this.github.token = '';
-                    alert("El Token es inválido. Por favor, pulsa Publicar de nuevo e ingresa el correcto.");
+                    alert("El Token es inválido o expiró. Inténtalo de nuevo.");
                     return;
                 }
 
                 const fileData = await res.json();
 
-                // 2. Preparar contenido
                 const newContent = `const CONFIG = ${JSON.stringify(this.config, null, 2)};\n\nconst MENU = ${JSON.stringify(this.products, null, 2)};\n\nconst GRADIENTS = {};`.trim();
                 const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
 
-                // 3. Subir a GitHub
                 const updateRes = await fetch(`https://api.github.com/repos/${this.github.repo}/contents/${this.github.path}`, {
                     method: 'PUT',
                     headers: {
@@ -214,7 +218,7 @@ function adminPanel() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: "Update from Aurora Admin",
+                        message: "📦 Actualización de Menú - Aurora Bakery",
                         content: encodedContent,
                         sha: fileData.sha,
                         branch: this.github.branch
@@ -222,14 +226,14 @@ function adminPanel() {
                 });
 
                 if (updateRes.ok) {
-                    this.showToast('¡ÉXITO TOTAL!', 'La web se está actualizando. Espera 30 segundos.');
+                    this.showToast('¡ÉXITO!', 'La web se actualizará en unos segundos.');
                 } else {
                     const errorJson = await updateRes.json();
                     throw new Error(errorJson.message);
                 }
             } catch (err) {
                 console.error(err);
-                this.showToast('Error de Conexión', 'No se pudo subir. Revisa tu Token.');
+                this.showToast('Error', 'No se pudo subir. Revisa el Token.');
             }
         },
 
