@@ -77,6 +77,45 @@ const MENU = [
       "Vainilla",
       "Oreo"
     ]
+  },
+  {
+    "id": 1777570532752,
+    "name": "Mini Donas",
+    "desc": "La dulzura de Aurora en cada dona. Decoradas con detalle y frescura en cada bocado.",
+    "price": "29",
+    "cat": "Dulces",
+    "image": "fotos-productos/prod-1777570532752.jpg",
+    "variants": [],
+    "options": [
+      {
+        "name": "Clasica",
+        "price": ""
+      },
+      {
+        "name": "Fresa",
+        "price": "5"
+      },
+      {
+        "name": "Vainilla",
+        "price": "5"
+      },
+      {
+        "name": "Oreo",
+        "price": "5"
+      },
+      {
+        "name": "Dulce De Leche",
+        "price": "5"
+      },
+      {
+        "name": "Sprinkls",
+        "price": "5"
+      },
+      {
+        "name": "Chocolate",
+        "price": "5"
+      }
+    ]
   }
 ];
 
