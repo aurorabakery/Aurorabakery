@@ -72,7 +72,7 @@ const MENU = [
   },
   {
     "id": 1777833151775,
-    "name": "CAJE JARS",
+    "name": "CAKE JARS",
     "desc": "Capas de bizcocho y crema en cada cucharada",
     "price": "250",
     "cat": "Pastelería",
@@ -80,7 +80,7 @@ const MENU = [
     "variants": [
       {
         "name": "8oz",
-        "price": ""
+        "price": "250"
       }
     ],
     "options": []
@@ -153,7 +153,7 @@ const MENU = [
     "variants": [
       {
         "name": "8oz",
-        "price": ""
+        "price": "120"
       }
     ],
     "options": [
@@ -185,7 +185,7 @@ const MENU = [
     "variants": [
       {
         "name": "8oz",
-        "price": ""
+        "price": "180"
       }
     ],
     "options": []
