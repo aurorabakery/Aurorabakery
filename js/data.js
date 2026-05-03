@@ -1,5 +1,5 @@
 const CONFIG = {
-  "phone": "18295095974",
+  "phone": "18292912577",
   "categories": [
     "Pastelería",
     "Dulces",
