@@ -35,7 +35,8 @@ const MENU = [
       "Suspiro Clásico",
       "Dulce de Leche",
       "Crema Pastelera"
-    ]
+    ],
+    "image": "fotos-productos/prod-bizcocho-vainilla.jpg"
   },
   {
     "id": "mini-donas-6",
@@ -62,7 +63,8 @@ const MENU = [
     "cat": "Dulces",
     "emoji": "🍫",
     "variants": [],
-    "options": []
+    "options": [],
+    "image": "fotos-productos/prod-brownie-premium.jpg"
   },
   {
     "id": "cupcake-decorado",
@@ -76,7 +78,8 @@ const MENU = [
       "Red Velvet",
       "Vainilla",
       "Oreo"
-    ]
+    ],
+    "image": "fotos-productos/prod-cupcake-decorado.jpg"
   }
 ];
 
