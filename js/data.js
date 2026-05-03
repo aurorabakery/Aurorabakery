@@ -179,10 +179,15 @@ const MENU = [
     "id": 1777837575323,
     "name": "TRES LECHE",
     "desc": "Suave, húmedo y clásico… ¡un antojo irresistible!",
-    "price": "180",
+    "price": "160",
     "cat": "Pastelería",
     "image": "",
-    "variants": [],
+    "variants": [
+      {
+        "name": "8oz",
+        "price": "180"
+      }
+    ],
     "options": []
   }
 ];
