@@ -13,7 +13,7 @@ const MENU = [
     "id": "bizcocho-vainilla",
     "name": "MINI CAKES",
     "desc": "Pequeños pero llenos de sabor, perfectos para compartir o regalar.",
-    "price": "650",
+    "price": "650.00",
     "cat": "Pastelería",
     "emoji": "🍰",
     "badge": "⭐ El Favorito",
