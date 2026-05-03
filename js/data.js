@@ -185,7 +185,7 @@ const MENU = [
     "variants": [
       {
         "name": "8oz",
-        "price": ""
+        "price": "0"
       }
     ],
     "options": []
