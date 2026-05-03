@@ -189,6 +189,16 @@ const MENU = [
       }
     ],
     "options": []
+  },
+  {
+    "id": 1777837668444,
+    "name": "ghsfsfdh",
+    "desc": "Suave, húmedo y clásico… ¡un antojo irresistible!",
+    "price": "180",
+    "cat": "Pastelería",
+    "image": "",
+    "variants": [],
+    "options": []
   }
 ];
 
