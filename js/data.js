@@ -174,6 +174,16 @@ const MENU = [
         "price": ""
       }
     ]
+  },
+  {
+    "id": 1777837575323,
+    "name": "TRES LECHE",
+    "desc": "Suave, húmedo y clásico… ¡un antojo irresistible!",
+    "price": "180",
+    "cat": "Pastelería",
+    "image": "",
+    "variants": [],
+    "options": []
   }
 ];
 
