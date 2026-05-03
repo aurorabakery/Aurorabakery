@@ -80,6 +80,76 @@ const MENU = [
       "Oreo"
     ],
     "image": "fotos-productos/prod-cupcake-decorado.jpg"
+  },
+  {
+    "id": 1777833151775,
+    "name": "Cake Jair",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833151775.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833171643,
+    "name": "Cake pop",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833171643.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833189658,
+    "name": "carlota de limon",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833189658.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833202934,
+    "name": "chese cake",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833202934.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833228967,
+    "name": "mini chese cake",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833228967.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833246089,
+    "name": "mousse de chinola",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833246089.jpg",
+    "variants": [],
+    "options": []
+  },
+  {
+    "id": 1777833257369,
+    "name": "tres leche",
+    "desc": "",
+    "price": "500",
+    "cat": "Pastelería",
+    "image": "fotos-productos/prod-1777833257369.jpg",
+    "variants": [],
+    "options": []
   }
 ];
 
