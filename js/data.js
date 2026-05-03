@@ -51,7 +51,8 @@ const MENU = [
       "Fresa",
       "Vainilla",
       "Veteadas"
-    ]
+    ],
+    "image": "fotos-productos/prod-mini-donas-6.jpg"
   },
   {
     "id": "brownie-premium",
@@ -75,41 +76,6 @@ const MENU = [
       "Red Velvet",
       "Vainilla",
       "Oreo"
-    ]
-  },
-  {
-    "id": 1777832530035,
-    "name": "Cake pop",
-    "desc": "Pequeños, deliciosos y llenos de sabor. Cubiertos de chocolate y perfectos para cualquier ocasión. 😍",
-    "price": "100",
-    "cat": "Pastelería",
-    "image": "fotos-productos/prod-1777832530035.jpg",
-    "variants": [],
-    "options": [
-      {
-        "name": "Chocolate ",
-        "price": ""
-      },
-      {
-        "name": "Fresa",
-        "price": ""
-      },
-      {
-        "name": "Chocolate blanco ",
-        "price": ""
-      },
-      {
-        "name": "Red velvet ",
-        "price": ""
-      },
-      {
-        "name": "Vainilla ",
-        "price": ""
-      },
-      {
-        "name": "Sprinkles ",
-        "price": ""
-      }
     ]
   }
 ];
