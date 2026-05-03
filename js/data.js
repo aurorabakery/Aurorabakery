@@ -11,24 +11,24 @@ const CONFIG = {
 const MENU = [
   {
     "id": "bizcocho-vainilla",
-    "name": "Bizcocho de Vainilla",
+    "name": "MINI CAKE ",
     "desc": "Esponjoso bizcocho artesanal con el toque secreto de Aurora.",
-    "price": 850,
+    "price": "650",
     "cat": "Pastelería",
     "emoji": "🍰",
     "badge": "⭐ El Favorito",
     "variants": [
       {
-        "name": "Pequeño",
-        "price": 850
+        "name": "Básico ",
+        "price": "650"
       },
       {
-        "name": "Mediano",
-        "price": 1200
+        "name": "Decorado ",
+        "price": "800"
       },
       {
-        "name": "Grande",
-        "price": 1800
+        "name": "Personalizas ",
+        "price": "950"
       }
     ],
     "options": [
@@ -70,7 +70,7 @@ const MENU = [
     "id": "cupcake-decorado",
     "name": "Cupcakes Temáticos",
     "desc": "Deliciosos cupcakes personalizados para cualquier ocasión.",
-    "price": 125,
+    "price": "150",
     "cat": "Pastelería",
     "emoji": "🧁",
     "variants": [],
@@ -83,72 +83,196 @@ const MENU = [
   },
   {
     "id": 1777833151775,
-    "name": "Cake Jair",
-    "desc": "",
-    "price": "500",
+    "name": "CAKE JARS",
+    "desc": "Capas de bizcocho y crema en cada cucharada.",
+    "price": "250",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833151775.jpg",
-    "variants": [],
-    "options": []
+    "variants": [
+      {
+        "name": "8oz",
+        "price": ""
+      }
+    ],
+    "options": [
+      {
+        "name": "Vainilla ",
+        "price": ""
+      },
+      {
+        "name": "Chocolate ",
+        "price": ""
+      },
+      {
+        "name": "Red velvet ",
+        "price": ""
+      }
+    ]
   },
   {
     "id": 1777833171643,
-    "name": "Cake pop",
-    "desc": "",
-    "price": "500",
+    "name": "CAKE POPS",
+    "desc": "Dulces bocados cubiertos de chocolate. ",
+    "price": "100",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833171643.jpg",
-    "variants": [],
-    "options": []
+    "variants": [
+      {
+        "name": "",
+        "price": ""
+      }
+    ],
+    "options": [
+      {
+        "name": "Vainilla ",
+        "price": ""
+      },
+      {
+        "name": "Red velvet ",
+        "price": ""
+      },
+      {
+        "name": "Chocola blanco ",
+        "price": ""
+      },
+      {
+        "name": "Chocolate ",
+        "price": ""
+      },
+      {
+        "name": "Fresa ",
+        "price": ""
+      },
+      {
+        "name": "Sprinkles ",
+        "price": ""
+      }
+    ]
   },
   {
     "id": 1777833189658,
-    "name": "carlota de limon",
-    "desc": "",
-    "price": "500",
+    "name": "CARLOTA",
+    "desc": "Refrescante, ácida y dulce a la vez.",
+    "price": "180",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833189658.jpg",
-    "variants": [],
-    "options": []
+    "variants": [
+      {
+        "name": "8oz",
+        "price": ""
+      }
+    ],
+    "options": [
+      {
+        "name": "Limón ",
+        "price": ""
+      },
+      {
+        "name": "Maracuya",
+        "price": ""
+      },
+      {
+        "name": "Mango ",
+        "price": ""
+      }
+    ]
   },
   {
     "id": 1777833202934,
-    "name": "chese cake",
-    "desc": "",
-    "price": "500",
+    "name": "CHEESECAKE",
+    "desc": "Cremoso y delicado, el equilibrio perfecto de dulzura ",
+    "price": "220",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833202934.jpg",
     "variants": [],
-    "options": []
+    "options": [
+      {
+        "name": "Oreo",
+        "price": ""
+      },
+      {
+        "name": "Chocolate vainilla ",
+        "price": ""
+      },
+      {
+        "name": "Dulce de leche ",
+        "price": ""
+      }
+    ]
   },
   {
     "id": 1777833228967,
-    "name": "mini chese cake",
-    "desc": "",
-    "price": "500",
+    "name": "MINI CHEESECAKE (4 porciones)",
+    "desc": "Cremoso y delicado ",
+    "price": "850",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833228967.jpg",
-    "variants": [],
-    "options": []
+    "variants": [
+      {
+        "name": "",
+        "price": ""
+      }
+    ],
+    "options": [
+      {
+        "name": "Oreo",
+        "price": ""
+      },
+      {
+        "name": "Fresa",
+        "price": ""
+      },
+      {
+        "name": "Chocolate ",
+        "price": ""
+      }
+    ]
   },
   {
     "id": 1777833246089,
-    "name": "mousse de chinola",
-    "desc": "",
-    "price": "500",
+    "name": "MOUSSE",
+    "desc": "Ligero, aireado y con un toque tropical.",
+    "price": "120",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833246089.jpg",
-    "variants": [],
-    "options": []
+    "variants": [
+      {
+        "name": "5oz",
+        "price": ""
+      }
+    ],
+    "options": [
+      {
+        "name": "Maracuya ",
+        "price": ""
+      },
+      {
+        "name": "Limón ",
+        "price": ""
+      },
+      {
+        "name": "Chocolate ",
+        "price": "30"
+      },
+      {
+        "name": "Mango ",
+        "price": "30"
+      }
+    ]
   },
   {
     "id": 1777833257369,
-    "name": "tres leche",
-    "desc": "",
-    "price": "500",
+    "name": "TRES LECHES",
+    "desc": "Suave, húmedo y clásico… ¡un antojo irresistible! 😋💕",
+    "price": "189",
     "cat": "Pastelería",
     "image": "fotos-productos/prod-1777833257369.jpg",
-    "variants": [],
+    "variants": [
+      {
+        "name": "8oz",
+        "price": "180"
+      }
+    ],
     "options": []
   }
 ];
